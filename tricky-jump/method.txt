@@ -1,0 +1,13 @@
+Jennifer Long
+CS 4630 Assignment 4: Tricky Jump
+October 11, 2018
+
+Method: First, I examined the objdump of target.exe to locate the address of the cavity. Next, I wrote the assembly code needed to print the virus string, including the tricky jump. I placed the string stored in memory at the end of the cavity, and put the payload between the tricky jump and the string. Then, I translated the assembly code to the binary commands in hex, including the storage of the string in ascii. Finally, I wrote infect.c to read in target.exe, replace the cavity with my virus code, and write the output to a new file infected-target.exe. I was able to hardcode the cavity addresses to insert my code.
+
+
+a) The file offset of the start of the function main is 0x49B
+
+b) The file offset of the start of the function Terminate Application is 0x426
+
+c) The file offset of the start of the function Initialize Application is 0x43A
+
