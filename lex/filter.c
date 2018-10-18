@@ -1,8 +1,8 @@
 /*
 Jennifer Long
-CS 4630 Assignment 4
-10/11/2018
-infect.c
+CS 4630 HW5: Lex
+10/17/2018
+filter.c
 */
 
 #include <stdio.h>
