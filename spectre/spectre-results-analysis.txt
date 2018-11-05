@@ -1,0 +1,39 @@
+Jennifer Long
+CS 4630
+HW 7: Spectre V1 and V2
+11/5/2018
+
+Spectre Variant 1 Process
+Step 1: Observation
+- First, I ran spectre.txt and observed the leaked output.
+  It shows the username "dumbledore" and its ascii values in hex.
+  Next, I went through the ghex file and searched for the ascii
+  string for "dumbledore": 64 75 6D 62 6C 65 64 6F 72 65.
+  I found that it is stored at address offset 000e61.
+
+- I then looked at the spectre.exe symbol table by running
+
+  objdump --syms spectre.exe > spectre_syms.txt
+
+  I searched "username", and found that the address for this
+  variable was 602148. Since strings are stored as char* arrays
+  in C, we know that this is an address pointer.
+
+- Looking at the main file objdump (objdump -D spectre.exe),
+  I found that at the address 602148 was the address 610e40
+  (400e61 in little endian). This confirms that this is where
+  the username string value is stored.
+
+
+Step 2: Leakage
+- I went through the same process to find the password.
+  I searched for "password" in the symbol table and found that
+  the pointer was located at address 602140.
+
+- Looking in the objdump at address 602140, the password address
+  is 580e40 (400e58 in little endian)
+
+- I instructed spectre.exe to read 20 bytes at address 400e58.
+  This printed out a string including the password. I observed
+  that there was a terminating byte, 0x00, after 8 bytes, so
+  the password must be 8 bytes long: dd0rR0x!
