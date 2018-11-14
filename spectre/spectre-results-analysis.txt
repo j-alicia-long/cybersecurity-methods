@@ -37,3 +37,53 @@ Step 2: Leakage
   This printed out a string including the password. I observed
   that there was a terminating byte, 0x00, after 8 bytes, so
   the password must be 8 bytes long: dd0rR0x!
+
+
+Spectre Variant 2 Analysis
+
+$ ./assignment-unsafe
+hot   val: 2093836
+probe val: 7249900
+cold  val: 10361792
+$ ./assignment-unsafe
+hot   val: 2128896
+probe val: 7374788
+cold  val: 10482548
+$ ./assignment-unsafe
+hot   val: 2216884
+probe val: 7062056
+cold  val: 11424768
+$ ./assignment-unsafe
+hot   val: 2175444
+probe val: 7172704
+cold  val: 11041236
+$ ./assignment-unsafe
+hot   val: 2090288
+probe val: 7339700
+cold  val: 7490092
+
+$ ./assignment-safe
+hot   val: 2124725
+probe val: 14980518
+cold  val: 11078805
+$ ./assignment-safe
+hot   val: 2185046
+probe val: 14871561
+cold  val: 7814363
+$ ./assignment-safe
+hot   val: 2058378
+probe val: 15177493
+cold  val: 10036022
+$ ./assignment-safe
+hot   val: 2231016
+probe val: 15501614
+cold  val: 9241118
+$ ./assignment-safe
+hot   val: 2170824
+probe val: 14719124
+cold  val: 10841100
+
+Analysis: On average, the probe_val fetch times of assignment-safe was over
+2 times the amount of that of assignment-unsafe. It's taking longer to access
+the values in cache, because the retpoline loop is discouraging the accesses.
+
