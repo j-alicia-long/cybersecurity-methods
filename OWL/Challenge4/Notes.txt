@@ -1,0 +1,12 @@
+gdb breakpoints: get_password, end of CP(*80484ab)
+ebp value: 0xffffd038
+
+No symboltable vars available
+
+Idea: Check params of strncmp function
+      Set breakpoint at strncmp@plt
+Command: x/s *(1 + (void**)$esp)
+^To see first param
+Source: https://stackoverflow.com/questions/3594582/gdb-and-strncmp-register-value-stored
+
+Password: hello

